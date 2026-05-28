@@ -1,0 +1,60 @@
+# Chief of Staff: local container.
+#
+# docker compose up --build         # build + start server on http://localhost:3030
+# docker compose run --rm setup     # run the setup wizard inside the container
+# docker compose run --rm demo      # seed demo data + start the server in demo mode
+# docker compose down -v            # stop and clear volumes (does NOT touch your .env)
+#
+# Bring your own .env (with ANTHROPIC_API_KEY, SELF_EMAIL, optional SMTP/Slack/Forward).
+# data/, projects/, memory/, logs/ are mounted from the host so state persists
+# across container restarts and the host's tools see the same files.
+
+services:
+  cos:
+    build: .
+    image: chief-of-staff:local
+    container_name: cos
+    ports:
+      - "3030:3030"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./projects:/app/projects
+      - ./memory:/app/memory
+      - ./logs:/app/logs
+      - ./context:/app/context
+      - ./CLAUDE.md:/app/CLAUDE.md
+      - ./tasks.md:/app/tasks.md
+    restart: unless-stopped
+
+  setup:
+    image: chief-of-staff:local
+    build: .
+    profiles: ["tools"]
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./projects:/app/projects
+      - ./memory:/app/memory
+      - ./context:/app/context
+      - ./CLAUDE.md:/app/CLAUDE.md
+      - ./AGENTS.md:/app/AGENTS.md
+      - ./.env:/app/.env
+    stdin_open: true
+    tty: true
+    command: ["node", "tools/setup.mjs"]
+
+  demo:
+    image: chief-of-staff:local
+    build: .
+    profiles: ["tools"]
+    environment:
+      - COS_DEMO=1
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./data:/app/data
+      - ./projects:/app/projects
+    command: ["sh", "-c", "node tools/demo.mjs && node server.mjs"]

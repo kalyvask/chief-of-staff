@@ -1,0 +1,18 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "kalyvask",
+  "description": "Personal Claude Code plugins from kalyvask.",
+  "owner": {
+    "name": "Alex Kalyvas",
+    "github": "kalyvask"
+  },
+  "plugins": [
+    {
+      "name": "chief-of-staff",
+      "version": "1.0.0",
+      "source": ".",
+      "description": "Personal chief-of-staff agent over a JSONL work queue, tier-based permission engine, conformance audits, typed-link graph, weekly digest, event-driven hooks, and inbound channels for forwarded email + Slack threads. Reads context/ and memory/ before responding; drafts emails to your own inbox; routes decisions into per-project state.",
+      "tags": ["chief-of-staff", "personal-agent", "queue", "permits", "conformance", "gmail", "calendar", "slack", "composio"]
+    }
+  ]
+}

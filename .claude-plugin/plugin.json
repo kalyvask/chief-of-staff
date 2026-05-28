@@ -1,0 +1,20 @@
+{
+  "name": "chief-of-staff",
+  "version": "1.0.0",
+  "description": "Personal chief-of-staff agent: queue, permits, conformance audits, typed graph, weekly digest, hooks, inbound channels for email + Slack. Reads context/ and memory/ before responding; drafts emails to your own inbox; routes decisions to per-project state.",
+  "author": "Alex Kalyvas (kalyvask)",
+  "homepage": "https://github.com/kalyvask/chief-of-staff",
+  "repository": "https://github.com/kalyvask/chief-of-staff",
+  "license": "ISC",
+  "keywords": [
+    "chief-of-staff",
+    "personal-agent",
+    "queue",
+    "permits",
+    "conformance",
+    "gmail",
+    "calendar",
+    "slack",
+    "composio"
+  ]
+}

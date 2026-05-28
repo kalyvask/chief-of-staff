@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chief of Staff</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&family=Instrument+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-mark">§</span>
+        <span class="brand-word">Chief of Staff</span>
+      </div>
+      <p class="brand-tagline"><em>Editorial sanctuary for one operator.</em></p>
+      <nav class="header-nav">
+        <button class="header-link" id="guideBtn">Guide</button>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <aside class="rail rail-left" aria-label="Context library">
+        <section>
+          <h2 class="rail-heading">Context</h2>
+          <ul class="context-list" id="contextList">
+            <li class="context-item is-loading">Loading…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">Memory</h2>
+          <ul class="context-list" id="memoryList"></ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">System</h2>
+          <ul class="context-list" id="systemList"></ul>
+        </section>
+      </aside>
+
+      <section class="chat" aria-label="Conversation">
+        <div class="chat-actions" role="toolbar" aria-label="Quick actions">
+          <button class="action" data-prompt="/brief">/brief</button>
+          <button class="action" data-prompt="/prep ">/prep</button>
+          <button class="action" data-prompt="/voice ">/voice</button>
+          <button class="action" data-prompt="/commit ">/commit</button>
+          <button class="action" data-prompt="/retro">/retro</button>
+        </div>
+
+        <div class="messages" id="messages" aria-live="polite">
+          <article class="message message-system">
+            <p class="message-meta">System</p>
+            <p>
+              <em>Direct prose, no em dashes.</em> Ask anything. The agent
+              reads from <code>CLAUDE.md</code>, the five context files, and
+              your memory log before answering.
+            </p>
+            <p>
+              New here? Open the <button class="inline-link" id="guideInline">Guide</button>
+              for the three surfaces and the daily cadence.
+            </p>
+          </article>
+        </div>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <textarea
+            id="prompt"
+            class="prompt"
+            rows="3"
+            placeholder="What is on my plate today?"
+            required
+          ></textarea>
+          <div class="composer-row">
+            <span class="prompt-hint">⌘+Enter to send</span>
+            <button class="send" type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="rail rail-right" aria-label="What needs your attention">
+        <section>
+          <h2 class="rail-heading">
+            Needs your attention
+            <span class="rail-count" id="maintCount">0</span>
+          </h2>
+          <ul class="maint-list" id="maintList">
+            <li class="maint-empty">All clear.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">
+            Queue
+            <span class="rail-count" id="queueCount">0</span>
+          </h2>
+          <ul class="queue-list" id="queueList">
+            <li class="maint-empty">Loading…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">
+            Projects
+            <span class="rail-count" id="projectsCount">0</span>
+          </h2>
+          <ul class="projects-list" id="projectsList">
+            <li class="maint-empty">Loading…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">
+            Tasks
+            <button class="rail-action" id="addTaskBtn" title="Edit tasks.md">edit</button>
+          </h2>
+          <ul class="tasks-list" id="tasksList">
+            <li class="maint-empty">Loading…</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">Voice audits</h2>
+          <div class="audit-card" id="auditCard">
+            <span class="audit-empty">No audits yet.</span>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="rail-heading">Recent runs</h2>
+          <ul class="recent-list" id="recentList">
+            <li class="recent-item recent-empty">No runs this session.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <span class="meta">Local UI</span>
+      <span class="meta">v1.1</span>
+      <span class="meta meta-status" id="status">idle</span>
+    </footer>
+
+    <!-- Editor / preview overlay -->
+    <div class="overlay" id="overlay" hidden>
+      <div class="modal" role="dialog" aria-modal="true" id="modal">
+        <header class="modal-header">
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <div class="modal-actions">
+            <button class="modal-close" id="modalCancel" type="button">Cancel</button>
+            <button class="modal-save" id="modalSave" type="button">Save</button>
+          </div>
+        </header>
+        <div class="modal-body">
+          <textarea class="modal-editor" id="modalEditor" spellcheck="false"></textarea>
+          <div class="modal-readonly" id="modalReadonly" hidden></div>
+        </div>
+        <footer class="modal-footer">
+          <span class="modal-hint" id="modalHint"></span>
+        </footer>
+      </div>
+    </div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

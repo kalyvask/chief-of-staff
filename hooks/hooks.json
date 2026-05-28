@@ -1,0 +1,16 @@
+{
+  "$comment": "SessionStart hook: when a user starts a Claude Code session with this plugin enabled, print a one-line notification. The full doctor is opt-in via `npm run doctor`. Path uses ${CLAUDE_PLUGIN_ROOT} so it works regardless of install location.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/notify-session-start.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

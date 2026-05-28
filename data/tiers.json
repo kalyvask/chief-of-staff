@@ -1,0 +1,98 @@
+{
+  "$comment": "Permissions config for the chief-of-staff agent. Tiers grant the agent the right to take specific side-effect actions. Default new actors to tier 0 (read-only + draft-to-self). Raise an actor's tier deliberately, per action class, and watch the audit log in data/permit-audit.jsonl.",
+  "tiers": {
+    "0": "Read only. Drafts land in my inbox via send-to-self.",
+    "1": "Inbox and calendar housekeeping. Archive newsletters, label threads, decline obvious calendar spam (no human attendees, marketing invites, double-bookings with explicit lower-priority).",
+    "2": "Short acknowledgments and routine reschedules. Send 2-line acks to people on the warm list, accept 1:1 reschedules within the same week.",
+    "3": "Pre-approved item execution. Act on a specific queue item that I have explicitly approved by id."
+  },
+  "actions": {
+    "queue.add": {
+      "id": "T0.queue-add",
+      "required_tier": 0,
+      "scope": "any"
+    },
+    "queue.update": {
+      "id": "T0.queue-update",
+      "required_tier": 0,
+      "scope": "any"
+    },
+    "queue.close": {
+      "id": "T0.queue-close",
+      "required_tier": 0,
+      "scope": "any"
+    },
+    "memory.write": {
+      "id": "T0.memory-write",
+      "required_tier": 0,
+      "scope": "decisions, relationships, learnings, project state"
+    },
+    "context.write": {
+      "id": "T0.context-write",
+      "required_tier": 0,
+      "scope": "context/ files"
+    },
+    "email.draft": {
+      "id": "T0.email-draft",
+      "required_tier": 0,
+      "scope": "any"
+    },
+    "email.send-self": {
+      "id": "T0.email-send-self",
+      "required_tier": 0,
+      "scope": "locked to SELF_EMAIL"
+    },
+    "logs.write": {
+      "id": "T0.logs-write",
+      "required_tier": 0,
+      "scope": "logs/"
+    },
+    "email.archive": {
+      "id": "T1.email-archive",
+      "required_tier": 1,
+      "scope": "newsletter, marketing, automated notifications"
+    },
+    "email.label": {
+      "id": "T1.email-label",
+      "required_tier": 1,
+      "scope": "any"
+    },
+    "calendar.decline-spam": {
+      "id": "T1.cal-decline-spam",
+      "required_tier": 1,
+      "scope": "no human attendees or marketing invites only"
+    },
+    "email.send-ack": {
+      "id": "T2.email-send-ack",
+      "required_tier": 2,
+      "scope": "<=2 lines, to known counterparty, no commitments"
+    },
+    "calendar.reschedule": {
+      "id": "T2.cal-reschedule",
+      "required_tier": 2,
+      "scope": "1:1, same-week, no external attendees"
+    },
+    "email.send-external": {
+      "id": "T3.email-send-external",
+      "required_tier": 3,
+      "scope": "only for a queue item with approval_state=approved and required_tier<=3"
+    },
+    "calendar.create-event": {
+      "id": "T3.cal-create-event",
+      "required_tier": 3,
+      "scope": "only for a queue item with approval_state=approved"
+    }
+  },
+  "actors": {
+    "user": 3,
+    "chief-of-staff": 0,
+    "email-drafter": 0,
+    "interview-prep": 0,
+    "relationship-curator": 0,
+    "cal-shape": 0,
+    "am-sweep": 0,
+    "email-triage": 0,
+    "calendar-prep": 0,
+    "cli": 0
+  }
+}

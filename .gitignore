@@ -1,0 +1,62 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+gcp-oauth.keys.json
+.composio/
+.gmail-mcp/
+.google-mcp/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code local
+.claude/settings.local.json
+
+# Other agent-tool local config (not part of this repo)
+.agents/
+.codex/
+
+# Personal overrides of template files (kept local, never pushed)
+*.local.md
+
+# Composio-managed MCP URL (per-user, includes secrets via headers)
+.mcp.composio.json
+
+# Generated weekly digests (personal data)
+memory/digest-*.md
+
+# Logs and runtime
+logs/*
+!logs/.gitkeep
+*.log
+
+# Personal data (queue, audit log, derived graph). Config files ship with the repo.
+data/*
+!data/.gitkeep
+!data/tiers.json
+!data/conform-rules.json
+# Personal conform overrides stay local
+data/conform-rules.local.json
+
+# Personal project state. The templates and README ship; live projects do not.
+projects/*/
+!projects/_template/
+!projects/_template-pipeline/
+!projects/_template-travel/

@@ -1,0 +1,28 @@
+name: eval
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build derived graph (needed by graph and contradiction suites)
+        run: node tools/build-graph.mjs
+
+      - name: Regression eval (conformance, permit, queue, graph, retrieval, think, entities, contradictions)
+        run: npm test

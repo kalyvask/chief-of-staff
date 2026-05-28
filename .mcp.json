@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "gmail": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@gongrzhe/server-gmail-autoauth-mcp"
+      ],
+      "env": {}
+    },
+    "gcal": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cocal/google-calendar-mcp"
+      ],
+      "env": {
+        "GOOGLE_OAUTH_CREDENTIALS": "C:\\Users\\alexa\\.google-mcp\\gcp-oauth.keys.json"
+      }
+    }
+  }
+}

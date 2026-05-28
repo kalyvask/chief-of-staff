@@ -1,0 +1,41 @@
+{
+  "$comment": "Conformance rule library. Edit to fit your voice. tools/conform.mjs loads this file at runtime. Add data/conform-rules.local.json for personal overrides (merged on top, not committed by default). Patterns are JavaScript regex strings; the `flags` field is optional (defaults to 'i').",
+  "ai_tells": [
+    { "pattern": "\\bdelv(e|ing)\\b", "label": "delve" },
+    { "pattern": "\\bnavigate the landscape\\b", "label": "navigate the landscape" },
+    { "pattern": "\\bin the world of\\b", "label": "in the world of" },
+    { "pattern": "\\bunlock(s|ed|ing)?\\b", "label": "unlock" },
+    { "pattern": "\\bleverag(e|ing|ed|es)\\b", "label": "leverage as verb" },
+    { "pattern": "\\bit('?s| is) not just\\b[^.!?]{0,80}\\b(it('?s| is)|also)\\b", "label": "not just X, also Y" },
+    { "pattern": "\\bnot just .{0,60} also\\b", "label": "not just X, also Y (short form)" },
+    { "pattern": "\\btapestry\\b", "label": "tapestry" },
+    { "pattern": "\\bgame[- ]chang(er|ing)\\b", "label": "game-changing" },
+    { "pattern": "\\bin today('?s| is) (world|landscape|environment)\\b", "label": "in today's <world>" },
+    { "pattern": "\\bcutting[- ]edge\\b", "label": "cutting-edge" },
+    { "pattern": "\\bseamless(ly)?\\b", "label": "seamless" },
+    { "pattern": "\\brobust\\b", "label": "robust" },
+    { "pattern": "\\bsynergy\\b", "label": "synergy" },
+    { "pattern": "\\bstreamlin(e|ed|ing)\\b", "label": "streamline" }
+  ],
+  "flattery": [
+    { "pattern": "\\bgreat question\\b", "label": "great question" },
+    { "pattern": "\\bexcellent point\\b", "label": "excellent point" },
+    { "pattern": "\\bfantastic\\b", "label": "fantastic" },
+    { "pattern": "\\bamazing\\b", "label": "amazing" }
+  ],
+  "email_bans": [
+    { "pattern": "\\bI hope (this|you('?re| are)) (finds you|find you|are doing|doing) well\\b", "label": "I hope this finds you well" },
+    { "pattern": "\\bjust (wanted|wanted to|circling back|following up)\\b", "label": "just wanted / just following up" },
+    { "pattern": "\\bbumping this\\b", "label": "bumping this" },
+    { "pattern": "\\bplease find attached\\b", "label": "please find attached" },
+    { "pattern": "\\bdo not hesitate to\\b", "label": "do not hesitate to" }
+  ],
+  "thresholds": {
+    "email_word_count_warn": 220,
+    "email_word_count_target": 200,
+    "email_bullet_salad_min": 5,
+    "brief_bullet_heavy_min": 8,
+    "brief_word_count_warn": 350,
+    "brief_word_count_target": 300
+  }
+}
