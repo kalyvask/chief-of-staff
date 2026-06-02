@@ -23,6 +23,13 @@ The claim transitions the item to `in-flight` with `assigned_to=email-drafter`. 
 3. Read `memory/relationships.md` for the most recent interaction with this person.
 4. If the item names a project, read `projects/<slug>/status.md`, `commitments.md`, and `decisions.md`.
 5. Read the full email thread, not just the latest message.
+6. Load voice priors. Pick 3-5 tags that match this draft's situation (e.g. `decline`, `recruiter`, `mentor`, `investor`, `cold-outreach`, `pricing`, `pushback`, `commit`, `intro`, `decline-meeting`, `confirm`). Then:
+
+   ```
+   node tools/voice-priors-cli.mjs list --n 8 --tag <primary-tag>
+   ```
+
+   Read up to 8 of the most recent matching exemplars. These are sentences Alex has actually said or written that captured his voice well; they are the positive complement to the conform critic (which only catches violations after the fact). Internalize the cadence and word choices. Do NOT copy phrases verbatim; the exemplars set the register, not the script. If the store is empty for your tag, fall back to general voice rules from `CLAUDE.md`.
 
 ## Permission gate
 

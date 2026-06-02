@@ -60,6 +60,36 @@ Show me the proposed text in the brief. Do not write to `memory/relationships.md
 ### What to watch for next time
 One sentence. The single thing about this relationship that, if it keeps recurring, is worth a deeper conversation about (not a tactical fix, a relationship-level conversation). Skip the section entirely if nothing rises to that bar. Do not invent something.
 
+### Voice exemplars captured
+After writing the four sections above, scan the transcript for sentences Alex said that are particularly clean instances of his voice. The point is to grow `data/voice-priors.jsonl` over time so the email-drafter has positive few-shot examples to anchor to (the complement to `tools/conform.mjs`, which only enforces negatively).
+
+What qualifies as a voice exemplar:
+
+- A direct decline that did not flatter or apologize
+- A re-frame that named what was actually being asked
+- A boundary set without softening ("I will not commit to that this quarter")
+- A concession that was specific rather than generic
+- A question that surfaced a kill criterion in one move
+- Anything that captures Alex's voice better than a generic LLM draft would
+
+Capture at most three exemplars per meeting. Skip the section entirely if nothing in the transcript clears the bar. Do not include exemplars from the counterparty.
+
+For each exemplar, append a record to `data/voice-priors.jsonl` via the CLI:
+
+```
+node tools/voice-priors-cli.mjs add \
+  --source meeting-coach \
+  --added-by "meeting-coach:<meeting-id>" \
+  --context "<situation in 6-10 words, e.g. 'declining cold recruiter outreach'>" \
+  --exemplar "<the exact sentence Alex said>" \
+  --why "<one sentence on why this is a useful exemplar>" \
+  --tags "<tag1,tag2>"
+```
+
+Then list the captured exemplars in the brief, one per line, so I can see what was added.
+
+If you cannot find anything that clears the bar, write "Voice exemplars captured: none this meeting" and move on. Empty is fine; padding is not.
+
 ## Tone
 
 Direct, second-person addressed to me. "You let X drop when Y said Z." No flattery. No softening. No "to be fair." When I did something well that taught a transferable pattern, name it once in the critique section and move on. The point is the critique, not the encouragement.

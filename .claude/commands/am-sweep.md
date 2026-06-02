@@ -5,6 +5,18 @@ mode: approval-required
 
 You are running my morning sweep. The goal is to convert a blank-slate morning into a triaged queue with concrete next actions.
 
+## Preflight
+
+Before any reads or classification, run the freshness check:
+
+```
+npm run check:freshness
+```
+
+If exit code is non-zero, stop. Tell me which context or memory files are stale (>21 days) or missing, and ask me to update them before continuing. The agent is only as good as the files it reads; running /am-sweep on month-old context produces generic, off-base output that the rest of the morning has to clean up.
+
+If exit code is zero, continue with the steps below.
+
 ## Steps
 
 1. Read `CLAUDE.md` for voice rules and the triage taxonomy.
