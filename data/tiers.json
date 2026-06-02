@@ -81,6 +81,16 @@
       "id": "T3.cal-create-event",
       "required_tier": 3,
       "scope": "only for a queue item with approval_state=approved"
+    },
+    "calendar.cancel": {
+      "id": "T3.cal-cancel",
+      "required_tier": 3,
+      "scope": "skip or delete a single recurring instance I organize, only for a queue item with approval_state=approved; never an other-party-initiated meeting"
+    },
+    "calendar.create-focus-block": {
+      "id": "T3.cal-focus-block",
+      "required_tier": 3,
+      "scope": "create a deep-work hold on my own calendar, only for a queue item with approval_state=approved"
     }
   },
   "actors": {
@@ -90,6 +100,7 @@
     "interview-prep": 0,
     "relationship-curator": 0,
     "cal-shape": 0,
+    "weekly-plan": 0,
     "am-sweep": 0,
     "email-triage": 0,
     "calendar-prep": 0,
