@@ -15,7 +15,13 @@ npm run check:freshness
 
 If exit code is non-zero, stop. Tell me which context or memory files are stale (>21 days) or missing, and ask me to update them before continuing. The agent is only as good as the files it reads; running /am-sweep on month-old context produces generic, off-base output that the rest of the morning has to clean up.
 
-If exit code is zero, continue with the steps below.
+If exit code is zero, check the context budget before loading the working set:
+
+```
+node tools/context-budget.mjs preset am-sweep --extra-tokens 6000
+```
+
+The `--extra-tokens` allowance covers today's calendar and Gmail pulls. If it reports `status: "over"` (exit code 2), do not load everything. Follow its recommendations first: read the weekly digest instead of raw `memory/` files (`npm run digest`), query the queue with `queue-cli list` instead of the full `data/queue.md`, and pull specific facts from `context/` via `npm run retrieve:search` rather than loading whole files. Then continue. If `ok` or `warn`, continue as normal.
 
 ## Steps
 

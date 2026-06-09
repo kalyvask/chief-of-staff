@@ -15,6 +15,7 @@ import {
   undoItem as qUndo, loadHistory as qHistory,
 } from "./tools/queue.mjs";
 import { loadTiers, permit as permitCheck, raiseActor } from "./tools/permit.mjs";
+import { detectCommand, resolveDisallow } from "./tools/tool-scope.mjs";
 import { postSlack } from "./tools/slack-respond.mjs";
 import { loadSlackContext, SLACK_REPLY_SYSTEM_BASE } from "./tools/slack-context.mjs";
 
@@ -864,6 +865,20 @@ app.post("/api/chat", async (req, res) => {
     return res.end();
   }
 
+  // Scope the MCP tool surface to what the invoked slash command needs, so the
+  // agent is not choosing among an oversized tool set. Unknown commands and
+  // natural-language prompts run unscoped. Never let a config error break chat.
+  let disallowedTools;
+  try {
+    const scope = resolveDisallow(detectCommand(prompt));
+    if (scope && scope.disallow.length) {
+      disallowedTools = scope.disallow;
+      send("tool", { name: `scope:${scope.command} (-${scope.disallow.join(",")})` });
+    }
+  } catch (err) {
+    /* scoping is best-effort; fall through unscoped */
+  }
+
   try {
     for await (const message of query({
       prompt,
@@ -872,6 +887,7 @@ app.post("/api/chat", async (req, res) => {
         systemPrompt: { type: "preset", preset: "claude_code", append: systemPrompt },
         permissionMode: "acceptEdits",
         settingSources: ["user", "project", "local"],
+        ...(disallowedTools ? { disallowedTools } : {}),
       },
     })) {
       switch (message.type) {

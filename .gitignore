@@ -52,6 +52,7 @@ data/*
 !data/.gitkeep
 !data/tiers.json
 !data/conform-rules.json
+!data/tool-scopes.json
 # Personal conform overrides stay local
 data/conform-rules.local.json
 

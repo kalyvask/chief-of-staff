@@ -1,0 +1,21 @@
+{
+  "$comment": "Per-command MCP tool scoping. Tool-selection accuracy falls off once the agent must choose among too many tools, so a command should only see the MCP servers it actually needs. Each command lists the servers it needs; every other known server is added to disallowedTools for that command. Built-in tools (Read, Bash, Edit, etc.) are never restricted, so scoping can tighten the surface without breaking a command. Commands not listed here run unscoped (backward compatible) -- add a command to opt it in. Matchers are server-level (mcp__<server>), which the SDK expands to all tools on that server.",
+  "mcp_servers": ["gcal", "gmail"],
+  "commands": {
+    "weekly-plan": ["gcal"],
+    "execute-approved": ["gcal"],
+    "cal-shape": ["gcal"],
+    "calendar-prep": ["gcal"],
+    "am-sweep": ["gcal", "gmail"],
+    "email-triage": ["gmail"],
+    "think": [],
+    "search": [],
+    "digest": [],
+    "retro": [],
+    "graph-query": [],
+    "contradictions": [],
+    "conform": [],
+    "voice": [],
+    "commit": []
+  }
+}

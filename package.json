@@ -10,6 +10,8 @@
     "queue:md": "node tools/queue-md.mjs",
     "queue:compact": "node tools/queue-cli.mjs compact",
     "permit": "node tools/permit-cli.mjs",
+    "context-budget": "node tools/context-budget.mjs",
+    "tool-scope": "node tools/tool-scope.mjs",
     "conform": "node tools/conform-cli.mjs",
     "graph": "node tools/build-graph.mjs",
     "graph:query": "node tools/graph-query.mjs",

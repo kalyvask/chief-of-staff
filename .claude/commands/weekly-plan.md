@@ -23,6 +23,7 @@ Once I answer, estimate the **hours the primary goal needs this week** (ask me i
 
 ## Step 2 - Read my state
 
+0. Check the context budget first: `node tools/context-budget.mjs preset weekly-plan --extra-tokens 5000` (the allowance covers the calendar pull). If it reports `status: "over"`, follow its recommendations before loading - digest `memory/` files, query the queue instead of dumping `data/queue.md`, retrieve specific `context/` facts - so the working set stays under budget.
 1. Read `CLAUDE.md` for voice rules and the triage taxonomy.
 2. Read `context/priorities.md` (plate) and `context/operating_principles.md` (my peak/trough energy windows; if not stated, assume deep work lands best in the morning and flag that as an assumption).
 3. Load the open queue: `node tools/queue-cli.mjs list` and `node tools/queue-cli.mjs overdue`. Do not re-propose anything already pending.
