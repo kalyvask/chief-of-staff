@@ -86,6 +86,18 @@ Walks the layers a scheduled overnight run depends on: repo path, batch files, `
 
 ## Setup
 
+### Try it first, no keys required
+
+```bash
+git clone https://github.com/kalyvask/chief-of-staff.git
+cd chief-of-staff && npm install
+npm run cos:demo        # seeds 8 sample queue items + a demo project, starts the web UI
+```
+
+Open http://localhost:3030. The queue, projects, and audit panels render real seeded data so you can see the substrate before connecting anything. Chat is disabled in demo mode; everything else works. `npm run cos:demo:cleanup` removes the demo data.
+
+### Full setup
+
 Requirements: Node 18+, an Anthropic API key, and either a Composio API key (for hosted Gmail/Calendar MCP) or a Google Cloud project (for the self-hosted route). Optional: a Google Maps API key with the Directions API enabled for drive-time calculations.
 
 Three install paths. **The Claude Code plugin is the recommended path** because it loads slash commands and subagents into every Claude Code session without a per-project install.
@@ -477,4 +489,4 @@ Adds: @-mention or DM the bot from any device and get a real-time LLM reply (Son
 
 ## License
 
-ISC. Fork and use it.
+MIT. See [LICENSE](LICENSE). Fork and use it.

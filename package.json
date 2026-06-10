@@ -60,7 +60,7 @@
     "productivity"
   ],
   "author": "Alexandros Kalyvas (@kalyvask)",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A personal Claude Code agent that turns Gmail, Google Calendar, and a file-based context library into a daily plan, classifying open work into Dispatch/Prep/Yours/Skip and drafting (never sending) on your behalf.",
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.122",

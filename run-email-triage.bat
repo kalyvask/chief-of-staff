@@ -5,7 +5,9 @@ REM Diagnose problems with:  npm run check:scheduler
 
 setlocal
 
-set "COS_DIR=C:\Users\alexa\OneDrive\Documents\GSB\claude\chief-of-staff"
+REM Resolve the repo root from this script's own location, so the .bat works
+REM from any clone path without editing.
+set "COS_DIR=%~dp0"
 cd /d "%COS_DIR%"
 if errorlevel 1 (
     echo [%date% %time%] FATAL cannot cd to %COS_DIR% >> "logs\scheduler.log"
