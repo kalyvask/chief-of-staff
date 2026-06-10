@@ -183,7 +183,7 @@ if (counts.fail > 0) {
   console.log('');
   console.log('Likely next steps:');
   console.log('  1. If schtasks not registered: npm run schedule -- --apply');
-  console.log('  2. If fail-mode streak: try `claude -p "/email-triage" --dangerously-skip-permissions --mcp-config .mcp.json` from a normal terminal and check whether Gmail tools load.');
+  console.log('  2. If fail-mode streak: try `claude -p "/email-triage" --allowedTools "Bash,Read,Write,Edit,Glob,Grep,mcp__gmail" --mcp-config .mcp.json` from a normal terminal and check whether Gmail tools load.');
   console.log('  3. If OAuth creds missing: re-auth the Gmail MCP via the gongrzhe package, or re-run `npm run composio:connect` if using the Composio path.');
   console.log('  4. If "last result" is non-zero on schtasks: open Task Scheduler UI, check History for the underlying error code.');
 }

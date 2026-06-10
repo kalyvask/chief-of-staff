@@ -20,7 +20,8 @@ echo [%date% %time%] starting /email-triage in %COS_DIR% >> "logs\scheduler.log"
 
 REM Pass --mcp-config explicitly. Auto-discovery of project-scoped .mcp.json is
 REM not always reliable when claude runs headless under Task Scheduler.
-claude -p "/email-triage" --dangerously-skip-permissions --mcp-config ".mcp.json" >> "logs\scheduler.log" 2>&1
+REM Unattended run: allow only the tools this command needs, deny the rest.
+claude -p "/email-triage" --allowedTools "Bash,Read,Write,Edit,Glob,Grep,mcp__gmail" --mcp-config ".mcp.json" >> "logs\scheduler.log" 2>&1
 set "EXITCODE=%ERRORLEVEL%"
 
 if not "%EXITCODE%"=="0" (

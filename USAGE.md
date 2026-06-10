@@ -114,11 +114,11 @@ Register-ScheduledTask -TaskName "cos calendar prep" `
 On macOS or Linux, use cron:
 
 ```cron
-0  6 * * * cd /path/to/chief-of-staff && claude -p "/email-triage"  --dangerously-skip-permissions >> logs/scheduler.log 2>&1
-15 6 * * * cd /path/to/chief-of-staff && claude -p "/calendar-prep" --dangerously-skip-permissions >> logs/scheduler.log 2>&1
+0  6 * * * cd /path/to/chief-of-staff && claude -p "/email-triage"  --allowedTools "Bash,Read,Write,Edit,Glob,Grep,mcp__gmail" >> logs/scheduler.log 2>&1
+15 6 * * * cd /path/to/chief-of-staff && claude -p "/calendar-prep" --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebFetch,mcp__gcal" >> logs/scheduler.log 2>&1
 ```
 
-Both jobs are read-only by default, so unattended runs are safe. The first manual run after setup triggers OAuth consent in the browser; later runs are silent.
+Unattended runs get an explicit tool allowlist instead of a permissions bypass: each job sees only the tools it needs, and anything outside the list is denied. Both jobs are read-only by design on top of that. The first manual run after setup triggers OAuth consent in the browser; later runs are silent.
 
 ## /am-sweep, the morning entry point
 

@@ -27,9 +27,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, '..');
 
+// Overnight jobs run unattended, so they get the narrowest tool surface that
+// still does the job -- never --dangerously-skip-permissions. Each command
+// names exactly the tools it needs; anything outside the list is denied.
+const TRIAGE_TOOLS = 'Bash,Read,Write,Edit,Glob,Grep,mcp__gmail';
+const CALPREP_TOOLS = 'Bash,Read,Write,Edit,Glob,Grep,WebFetch,mcp__gcal';
+
 const TASKS = [
-  { id: 'cos-email-triage', time: '06:00', bat: 'run-email-triage.bat', cron: '0 6 * * *', cmd: 'claude -p "/email-triage" --dangerously-skip-permissions >> logs/scheduler.log 2>&1' },
-  { id: 'cos-calendar-prep', time: '06:15', bat: 'run-calendar-prep.bat', cron: '15 6 * * *', cmd: 'claude -p "/calendar-prep" --dangerously-skip-permissions >> logs/scheduler.log 2>&1' },
+  { id: 'cos-email-triage', time: '06:00', bat: 'run-email-triage.bat', cron: '0 6 * * *', cmd: `claude -p "/email-triage" --allowedTools "${TRIAGE_TOOLS}" >> logs/scheduler.log 2>&1` },
+  { id: 'cos-calendar-prep', time: '06:15', bat: 'run-calendar-prep.bat', cron: '15 6 * * *', cmd: `claude -p "/calendar-prep" --allowedTools "${CALPREP_TOOLS}" >> logs/scheduler.log 2>&1` },
   { id: 'cos-hooks-runner', time: '06:30', bat: null, cron: '30 6 * * *', cmd: 'node tools/hooks-runner.mjs >> logs/hooks.log 2>&1' },
 ];
 

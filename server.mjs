@@ -16,6 +16,7 @@ import {
 } from "./tools/queue.mjs";
 import { loadTiers, permit as permitCheck, raiseActor } from "./tools/permit.mjs";
 import { detectCommand, resolveDisallow } from "./tools/tool-scope.mjs";
+import { makeCanUseTool } from "./tools/enforce.mjs";
 import { postSlack } from "./tools/slack-respond.mjs";
 import { loadSlackContext, SLACK_REPLY_SYSTEM_BASE } from "./tools/slack-context.mjs";
 
@@ -888,6 +889,10 @@ app.post("/api/chat", async (req, res) => {
         permissionMode: "acceptEdits",
         settingSources: ["user", "project", "local"],
         ...(disallowedTools ? { disallowedTools } : {}),
+        // Side-effect MCP tools (calendar/email writes) are denied at the tool
+        // layer unless a fresh allowed permit-cli check exists in the audit
+        // log. Turns the permit contract into mechanism. tools/enforce.mjs.
+        canUseTool: makeCanUseTool(),
       },
     })) {
       switch (message.type) {

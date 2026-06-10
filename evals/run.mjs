@@ -18,6 +18,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { audit, summarize, checkVoice, checkEmailDraft } from '../tools/conform.mjs';
 import { permit } from '../tools/permit.mjs';
@@ -354,6 +355,20 @@ function suiteContradictions() {
   assertTruthy('contradictions', 'summarize returns counts object', typeof sum.counts === 'object');
 }
 
+// --- Tool self-test suite ---------------------------------------------------
+// Some tools carry their own self-test CLIs (pure rule engines with embedded
+// fixtures). Run each as a child process so `npm test` and CI cover them
+// without duplicating the cases here.
+function suiteSelfTests() {
+  const tools = ['planner', 'context-budget', 'tool-scope', 'enforce'];
+  for (const tool of tools) {
+    const r = spawnSync(process.execPath, [path.resolve(REPO_ROOT, 'tools', `${tool}.mjs`), 'self-test'], { encoding: 'utf8' });
+    const summary = (r.stdout || '').trim().split('\n').pop() || '';
+    record('self-tests', `${tool} (${summary})`, r.status === 0,
+      r.status === 0 ? null : { exit: r.status, tail: (r.stdout || r.stderr || '').slice(-400) });
+  }
+}
+
 // --- Run ------------------------------------------------------------------
 const args = parseArgs(process.argv);
 const filter = args.only;
@@ -367,6 +382,7 @@ const suites = [
   ['think', suiteThink],
   ['entities', suiteEntities],
   ['contradictions', suiteContradictions],
+  ['self-tests', suiteSelfTests],
 ];
 
 for (const [name, fn] of suites) {

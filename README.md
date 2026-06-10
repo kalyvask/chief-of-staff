@@ -36,7 +36,7 @@ Four layers of verification, each runnable independently.
 
 ### Deterministic substrate, `npm test`
 
-65 fixtures over conformance rules, permission engine, queue lifecycle, graph ingestion, retrieval, entity extraction, and contradiction detection. Wired to GitHub Actions on push and pull request. Latest local run (2026-05-24):
+69 checks over conformance rules, permission engine, queue lifecycle, graph ingestion, retrieval, entity extraction, contradiction detection, and the self-tested rule engines (planner, context-budget, tool-scope, enforce). Wired to GitHub Actions on push and pull request. Latest local run (2026-06-09):
 
 ```
 ok    conform/clean email passes
@@ -53,7 +53,7 @@ ok    queue/closed item not in loadOpen
 ...
 ok    graph/all edges have type + from
 
-39/39 passed
+69/69 passed
 ```
 
 ### Agent classification, `npm run eval:agent`
@@ -171,6 +171,8 @@ docker compose --profile tools run --rm demo   # seeded demo
 - `/discover <name> [email]`: research a new person from Gmail and a brief web search, draft a `stakeholders.md` entry for approval. Cites sources; never invents.
 - `/bootstrap-relationships [days]`: one-shot backfill from the last N days of Granola (default 90). Drafts proposed entries for `relationships.md`, `stakeholders.md` candidates, and `meetings.md`, then rebuilds the graph.
 - `/cal-shape`: shapes the week ahead. Pulls the next five business days of calendar, classifies each event keep / decline / shift / batch / no-op, writes proposals as Yellow queue items, drafts the outbound messages via `email-drafter`. Does not move the calendar; tier-3 actions handle that later after explicit approval.
+- `/weekly-plan`: Monday planning ritual. Asks what has to ship this week and in the next 48 hours (and pushes for one primary goal), then reconciles that against the next 7 days of calendar: computes the free-hours deficit against the goal, applies the cadence-floor rule in `tools/planner.mjs` to find recurring 1:1s safe to skip (skip only with a recent base of contact; relationships gone cold are flagged to reconnect, never skipped), proposes deep-work blocks in peak-energy windows, and writes every move as a tier-3 queue proposal plus a brief at `logs/weekly-plan-<monday>.md`. Does not move the calendar.
+- `/execute-approved`: the one command that writes the calendar. Takes already-approved queue items from `/weekly-plan` or `/cal-shape`, runs a `permit-cli check` per item, shows the plan, and only on go-ahead makes the write: delete the single recurring instance (never the series), create the focus block, or apply the reschedule, notifications off. Denied until you raise `calendar-actor` to tier 3; that one-time raise is the intended enable switch.
 - `/voice <text>`: rewrites pasted text to strip em dashes and AI tells. Cleanup pass.
 - `/critique <text>`: structural critique against a 12-dimension rubric (BLUF, warmth, jargon load, AI tells, structural opener, others). Diagnostic; does not rewrite.
 - `/conform <text>`: runs `tools/conform-cli.mjs` over pasted text. Catches em dashes, AI tells, flattery, banned email phrases, bullet-salad briefs, missing sources footer. Returns a structured report; offers a clean rewrite when high-severity hits exist.
@@ -204,8 +206,25 @@ npm run queue:compact                          # rewrite JSONL, keep latest snap
 # Permission engine
 npm run permit -- check --action email.archive --actor email-drafter
 npm run permit -- raise --actor email-drafter --tier 1 --reason "trust earned on newsletter archive"
+npm run permit -- raise --actor calendar-actor --tier 3 --reason "enable approved calendar execution"
 npm run permit -- list                         # action catalog
 npm run permit -- actors                       # current actor tiers
+
+# Weekly planner rules (the deterministic logic behind /weekly-plan)
+node tools/planner.mjs skip-decision --interval 7 --last 2026-06-02 --recent 4   # skip | keep | prioritize
+node tools/planner.mjs deficit --needed 8 --free 5.5
+node tools/planner.mjs self-test
+
+# Context budget (keep a command's working set under 40% of the window)
+npm run context-budget -- preset am-sweep --extra-tokens 6000   # exit 2 = over budget, offload first
+npm run context-budget -- check --files CLAUDE.md,memory/relationships.md
+
+# Per-command MCP tool scoping (a command only sees the servers it needs)
+npm run tool-scope -- resolve --command weekly-plan   # which servers are disallowed for this command
+npm run tool-scope -- list                            # the full config (data/tool-scopes.json)
+
+# Tool-use enforcement (MCP calendar/email writes require a fresh permit allow)
+node tools/enforce.mjs decide mcp__gcal__delete_event   # would this call be allowed right now?
 
 # Conformance audits (encode the voice rules as code)
 echo "draft text..." | npm run conform -- audit --kind email --item <id>
@@ -320,11 +339,11 @@ Register-ScheduledTask -TaskName "cos calendar prep" `
 On macOS or Linux, use cron:
 
 ```cron
-0  6 * * * cd /path/to/chief-of-staff && claude -p "/email-triage"  --dangerously-skip-permissions >> logs/scheduler.log 2>&1
-15 6 * * * cd /path/to/chief-of-staff && claude -p "/calendar-prep" --dangerously-skip-permissions >> logs/scheduler.log 2>&1
+0  6 * * * cd /path/to/chief-of-staff && claude -p "/email-triage"  --allowedTools "Bash,Read,Write,Edit,Glob,Grep,mcp__gmail" >> logs/scheduler.log 2>&1
+15 6 * * * cd /path/to/chief-of-staff && claude -p "/calendar-prep" --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebFetch,mcp__gcal" >> logs/scheduler.log 2>&1
 ```
 
-Both jobs are read-only by default, so unattended runs are safe.
+Unattended runs get an explicit tool allowlist instead of a permissions bypass: each job sees only the tools it needs, and anything outside the list is denied. Both jobs are read-only by design on top of that.
 
 If a scheduled run produces a fail-mode log (the agent declined to fabricate output because its dependencies were not available), diagnose with:
 
